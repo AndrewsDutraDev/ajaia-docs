@@ -2,7 +2,7 @@
 
 Editor de documentos colaborativo e leve, inspirado no Google Docs. Construído como exercício de produto/engenharia para a Ajaia: o objetivo não foi recriar o Google Docs, e sim entregar um fluxo de criação, edição, importação e compartilhamento de documentos que seja **coerente, funcional e bem fundamentado**, dentro de um escopo enxuto.
 
-**Demo:** _(link da Vercel após o deploy)_
+**Demo:** [ajaia-doc-app.vercel.app](https://ajaia-doc-app.vercel.app)
 **Contas de teste:** `ana@ajaia.com` e `bruno@ajaia.com` (sem senha — ver seção Autenticação)
 
 ---
