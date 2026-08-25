@@ -64,6 +64,18 @@ Duas contas de atalho aparecem na tela de login (`ana@ajaia.com`, `bruno@ajaia.c
 
 ## Arquitetura e decisões
 
+### Prioridades e motivos
+
+Com escopo e prazo limitados, a ordem de prioridade foi:
+
+1. **Fluxo principal completo e sólido, em vez de recursos parciais.** Criar → editar/formatar → importar → compartilhar → persistir funciona de ponta a ponta, com validação e controle de acesso reais. Preferi isso a começar recursos extras (histórico de versões, tempo real, anexos) e deixá-los pela metade — meio recurso não demonstra nada além de que ficou sem tempo.
+2. **Um único deploy, sem partes móveis desnecessárias.** Next.js serve front e API routes do mesmo projeto, na mesma origem — sem CORS, sem dois serviços para sincronizar, sem infra extra para o revisor rodar. O único componente externo é o banco (Postgres/Neon), porque isso é inevitável em serverless (ver abaixo) — não por escolha de arquitetura.
+3. **Regras de negócio centralizadas e testáveis, não espalhadas pelas rotas.** Controle de acesso (`src/lib/access.ts`) e conversão de arquivo importado (`src/lib/importFile.ts`) são funções puras, sem I/O, chamadas por todas as rotas que precisam delas. Isso evita duas rotas divergirem sutilmente sobre "quem pode editar o quê" e é o que torna os testes automatizados possíveis sem subir banco ou browser.
+4. **Autenticação simulada de propósito, não por atalho preguiçoso.** O desafio permite login simulado explicitamente; investir tempo em um provedor de auth real (OAuth, verificação de e-mail) não demonstraria mais domínio técnico do que já é demonstrado no resto do app, e tiraria tempo do fluxo de produto que era o ponto central do exercício.
+5. **Escrita sempre via API, leitura direta no servidor quando dá.** Dashboard e editor buscam dados via Prisma direto no server component (mais rápido, menos código). Toda mutação passa por uma API route com validação (Zod) e checagem de permissão — o que também deixa a API completa e testável isoladamente por fora da UI (veja os exemplos de `curl` mais abaixo).
+
+O que ficou de fora, de propósito, para manter esse foco: anexos por documento, histórico de versões/desfazer, edição simultânea em tempo real (multiplayer), controle de acesso granular por trecho do documento, notificação por e-mail ao compartilhar.
+
 ```
 src/
   app/
@@ -89,8 +101,6 @@ src/
 **Por que Postgres em vez de SQLite/arquivo local?** A Vercel roda funções serverless sem disco persistente entre invocações — SQLite em arquivo local não sobreviveria a um redeploy ou a múltiplas instâncias. Postgres gerenciado (Neon) resolve isso e ainda é gratuito.
 
 **Modelo de permissão:** três níveis — `OWNER` (dono, controle total), `EDIT` (compartilhado, pode editar conteúdo/título, não pode compartilhar/excluir), `VIEW` (compartilhado, somente leitura). Resolvido por uma única função pura testável (`resolveAccess`), evitando checagens de permissão espalhadas e divergentes pelas rotas.
-
-**O que ficou de fora, de propósito:** anexos por documento, histórico de versões/desfazer, edição simultânea em tempo real (multiplayer), controle de acesso granular por trecho do documento, notificação por e-mail ao compartilhar. O enunciado permite escopo reduzido — priorizei ter o fluxo principal (criar → editar → formatar → importar → compartilhar → persistir) completo e sólido em vez de recursos parciais.
 
 ---
 
