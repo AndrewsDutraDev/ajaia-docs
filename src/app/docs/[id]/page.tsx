@@ -30,6 +30,7 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
       documentId={document.id}
       initialTitle={document.title}
       initialContentHtml={document.contentHtml}
+      initialUpdatedAt={document.updatedAt.toISOString()}
       role={role!}
       ownerLabel={role === "OWNER" ? null : document.owner.name}
       currentUser={currentUser}

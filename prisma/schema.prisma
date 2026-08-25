@@ -15,20 +15,38 @@ model User {
 
   documents Document[] @relation("OwnedDocuments")
   shares    Share[]
+  edits     Document[] @relation("LastEditedBy")
+  presences Presence[]
 }
 
 model Document {
-  id          String   @id @default(cuid())
-  title       String
-  contentHtml String   @default("<p></p>") @db.Text
-  ownerId     String
-  owner       User     @relation("OwnedDocuments", fields: [ownerId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  title          String
+  contentHtml    String   @default("<p></p>") @db.Text
+  ownerId        String
+  owner          User     @relation("OwnedDocuments", fields: [ownerId], references: [id], onDelete: Cascade)
+  lastEditedById String?
+  lastEditedBy   User?    @relation("LastEditedBy", fields: [lastEditedById], references: [id], onDelete: SetNull)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  shares Share[]
+  shares    Share[]
+  presences Presence[]
 
   @@index([ownerId])
+}
+
+/// Ephemeral "who has this document open right now" heartbeat, polled by clients.
+model Presence {
+  id         String   @id @default(cuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastSeenAt DateTime @updatedAt
+
+  @@unique([documentId, userId])
+  @@index([documentId])
 }
 
 enum Role {
