@@ -15,14 +15,17 @@ export default function UserMenu({ name, email }: { name: string; email: string 
   }
 
   return (
-    <div className="flex items-center gap-3 text-sm">
-      <span className="text-neutral-600">
-        <span className="font-medium text-neutral-900">{name}</span> · {email}
+    <div className="flex items-center gap-2.5 text-sm">
+      <span className="w-6 h-6 rounded-full bg-accent-tint text-accent-dark font-serif font-semibold text-xs flex items-center justify-center shrink-0">
+        {name.charAt(0).toUpperCase()}
+      </span>
+      <span className="text-ink-soft hidden sm:inline">
+        <span className="font-medium text-ink">{name}</span> · {email}
       </span>
       <button
         onClick={logout}
         disabled={loggingOut}
-        className="text-neutral-500 hover:text-neutral-900 disabled:opacity-50"
+        className="text-ink-soft hover:text-ink transition-colors duration-150 disabled:opacity-50"
       >
         Log out
       </button>

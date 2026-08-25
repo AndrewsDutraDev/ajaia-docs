@@ -25,8 +25,8 @@ function ToolbarButton({
       title={label}
       disabled={disabled}
       onClick={onClick}
-      className={`px-2.5 py-1.5 rounded text-sm font-medium disabled:opacity-30 disabled:cursor-not-allowed ${
-        active ? "bg-neutral-900 text-white" : "hover:bg-neutral-200 text-neutral-700"
+      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed ${
+        active ? "bg-accent text-white" : "text-ink-soft hover:bg-accent-tint hover:text-accent-dark"
       }`}
     >
       {children}
@@ -36,7 +36,7 @@ function ToolbarButton({
 
 function Toolbar({ editor }: { editor: TiptapEditor }) {
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b border-neutral-200 bg-white px-3 py-2 sticky top-0 z-10">
+    <div className="flex flex-wrap items-center gap-1 bg-paper/70 backdrop-blur-sm px-3 py-2.5 sticky top-0 z-10 rounded-t-2xl">
       <ToolbarButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}>
         <span className="font-bold">B</span>
       </ToolbarButton>
@@ -47,7 +47,7 @@ function Toolbar({ editor }: { editor: TiptapEditor }) {
         <span className="underline">U</span>
       </ToolbarButton>
 
-      <span className="w-px h-5 bg-neutral-300 mx-1" />
+      <span className="w-px h-5 bg-line mx-1" />
 
       <ToolbarButton label="Paragraph" active={editor.isActive("paragraph")} onClick={() => editor.chain().focus().setParagraph().run()}>
         Text
@@ -74,7 +74,7 @@ function Toolbar({ editor }: { editor: TiptapEditor }) {
         H3
       </ToolbarButton>
 
-      <span className="w-px h-5 bg-neutral-300 mx-1" />
+      <span className="w-px h-5 bg-line mx-1" />
 
       <ToolbarButton
         label="Bullet list"
@@ -152,9 +152,9 @@ export default function Editor({
   if (!editor) return null;
 
   return (
-    <div className="border border-neutral-200 rounded-lg bg-white shadow-sm overflow-hidden">
+    <div className="rounded-2xl bg-white shadow-soft overflow-hidden">
       {editable && <Toolbar editor={editor} />}
-      <div className="px-6 py-4 max-w-3xl mx-auto">
+      <div className="px-8 py-6 max-w-3xl mx-auto">
         <EditorContent editor={editor} />
       </div>
     </div>

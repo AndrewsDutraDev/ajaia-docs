@@ -32,9 +32,9 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-bold mb-1">Ajaia Docs</h1>
-        <p className="text-sm text-neutral-600 mb-6">
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-soft p-8">
+        <h1 className="font-serif text-2xl font-semibold mb-1.5 text-ink">Ajaia Docs</h1>
+        <p className="text-sm text-ink-soft mb-6 leading-relaxed">
           Enter your email to sign in. No password required — this is a prototype with simulated authentication.
         </p>
 
@@ -51,20 +51,20 @@ export default function LoginPage() {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-800"
+            className="w-full rounded-xl border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-soft/70 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors duration-150"
           />
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-700">{error}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-neutral-900 text-white py-2 text-sm font-medium disabled:opacity-50"
+            className="w-full rounded-full bg-accent text-white py-2.5 text-sm font-medium transition-[filter,transform] duration-150 hover:brightness-110 active:translate-y-px disabled:opacity-50"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
 
         <div className="mt-6">
-          <p className="text-xs text-neutral-500 mb-2">
+          <p className="text-xs text-ink-soft mb-2">
             Example accounts to test sharing between users:
           </p>
           <div className="flex gap-2">
@@ -74,7 +74,7 @@ export default function LoginPage() {
                 type="button"
                 disabled={loading}
                 onClick={() => login(quickEmail)}
-                className="text-xs rounded-full border border-neutral-300 px-3 py-1 hover:bg-neutral-100 disabled:opacity-50"
+                className="text-xs rounded-full bg-paper border border-line px-3 py-1 text-ink-soft transition-colors duration-150 hover:bg-accent-tint hover:text-accent-dark hover:border-accent/30 disabled:opacity-50"
               >
                 {quickEmail}
               </button>
