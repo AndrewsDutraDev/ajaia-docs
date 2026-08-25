@@ -25,8 +25,10 @@ export default async function DocumentPrintPage({ params }: { params: Promise<{ 
   return (
     <div className="doc-print max-w-3xl mx-auto px-8 py-10">
       <style>{`
-        .doc-print h1 { font-size: 1.9rem; font-weight: 700; margin: 0 0 1.5rem; }
-        .doc-print h2 { font-size: 1.5rem; font-weight: 700; margin: 1.2rem 0 0.5rem; }
+        .doc-print { color: #201e1c; }
+        .doc-print h1, .doc-print h2, .doc-print h3 { font-family: var(--font-lora), Georgia, serif; }
+        .doc-print h1 { font-size: 1.9rem; font-weight: 600; margin: 0 0 1.5rem; }
+        .doc-print h2 { font-size: 1.5rem; font-weight: 600; margin: 1.2rem 0 0.5rem; }
         .doc-print h3 { font-size: 1.2rem; font-weight: 600; margin: 1rem 0 0.4rem; }
         .doc-print p { margin: 0.6rem 0; line-height: 1.6; }
         .doc-print ul, .doc-print ol { margin: 0.6rem 0; padding-left: 1.5rem; }

@@ -126,10 +126,10 @@ export default function DocumentWorkspace({
 
   return (
     <main className="min-h-screen">
-      <header className="border-b border-neutral-200 bg-white">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <header className="bg-paper/90 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <Link href="/docs" className="text-sm text-neutral-500 hover:text-neutral-900 shrink-0">
+            <Link href="/docs" className="text-sm text-ink-soft hover:text-ink transition-colors duration-150 shrink-0">
               ← Documents
             </Link>
             <input
@@ -141,22 +141,22 @@ export default function DocumentWorkspace({
                 titleFocusedRef.current = false;
                 if (canEdit && title.trim()) save({ title: title.trim() });
               }}
-              className="font-semibold text-lg bg-transparent focus:outline-none focus:bg-neutral-100 rounded px-1.5 py-0.5 min-w-0 truncate disabled:text-neutral-700"
+              className="font-serif font-semibold text-lg bg-transparent focus:outline-none focus:bg-white rounded-lg px-2 py-1 min-w-0 truncate text-ink disabled:text-ink transition-colors duration-150"
             />
           </div>
           <div className="flex items-center gap-3 shrink-0">
-            {liveNotice && <span className="text-xs text-blue-600 hidden md:inline">{liveNotice}</span>}
+            {liveNotice && <span className="text-xs text-accent-dark hidden md:inline">{liveNotice}</span>}
             <ViewerBar viewers={viewers} />
             <SaveIndicator status={status} />
             {role === "VIEW" && (
-              <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800">Read-only</span>
+              <span className="text-xs px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-medium">Read-only</span>
             )}
-            {ownerLabel && <span className="text-xs text-neutral-500 hidden sm:inline">from {ownerLabel}</span>}
+            {ownerLabel && <span className="text-xs text-ink-soft hidden sm:inline">from {ownerLabel}</span>}
             <ExportMenu documentId={documentId} />
             {role === "OWNER" && (
               <button
                 onClick={() => setShareOpen(true)}
-                className="text-sm rounded-md border border-neutral-300 px-3 py-1.5 hover:bg-neutral-100"
+                className="text-sm rounded-full bg-white text-ink px-3.5 py-1.5 shadow-softer transition-shadow duration-150 hover:shadow-soft"
               >
                 Share
               </button>
@@ -186,7 +186,7 @@ function SaveIndicator({ status }: { status: SaveStatus }) {
     status === "saving" ? "Saving…" : status === "saved" ? "Saved" : status === "error" ? "Error saving" : "";
   if (!text) return null;
   return (
-    <span className={`text-xs ${status === "error" ? "text-red-600" : "text-neutral-500"}`}>{text}</span>
+    <span className={`text-xs ${status === "error" ? "text-red-700" : "text-ink-soft"}`}>{text}</span>
   );
 }
 
@@ -195,10 +195,10 @@ function ViewerBar({ viewers }: { viewers: Viewer[] }) {
   const label = viewers.map((v) => (v.isSelf ? "You" : v.name)).join(", ");
   return (
     <span
-      className="text-xs text-neutral-600 hidden lg:inline-flex items-center gap-1"
+      className="text-xs text-ink-soft hidden lg:inline-flex items-center gap-1.5"
       title={`Currently viewing: ${label}`}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+      <span className="w-1.5 h-1.5 rounded-full bg-accent" />
       {viewers.length} viewing
     </span>
   );
@@ -223,19 +223,19 @@ function ExportMenu({ documentId }: { documentId: string }) {
     <div className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="text-sm rounded-md border border-neutral-300 px-3 py-1.5 hover:bg-neutral-100"
+        className="text-sm rounded-full bg-white text-ink px-3.5 py-1.5 shadow-softer transition-shadow duration-150 hover:shadow-soft"
       >
         Export ▾
       </button>
       {open && (
         <div
           onMouseLeave={() => setOpen(false)}
-          className="absolute right-0 mt-1 w-40 bg-white border border-neutral-200 rounded-md shadow-lg py-1 z-20"
+          className="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-soft py-1.5 z-20"
         >
-          <button onClick={exportMarkdown} className="w-full text-left px-3 py-1.5 text-sm hover:bg-neutral-100">
+          <button onClick={exportMarkdown} className="w-full text-left px-4 py-2 text-sm text-ink rounded-xl hover:bg-accent-tint hover:text-accent-dark transition-colors duration-150">
             Markdown (.md)
           </button>
-          <button onClick={exportPdf} className="w-full text-left px-3 py-1.5 text-sm hover:bg-neutral-100">
+          <button onClick={exportPdf} className="w-full text-left px-4 py-2 text-sm text-ink rounded-xl hover:bg-accent-tint hover:text-accent-dark transition-colors duration-150">
             PDF
           </button>
         </div>

@@ -52,11 +52,11 @@ export default function ShareDialog({ documentId, onClose }: { documentId: strin
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-lg">Share document</h2>
-          <button onClick={onClose} className="text-neutral-500 hover:text-neutral-900 text-sm">
+    <div className="fixed inset-0 bg-ink/30 backdrop-blur-[2px] flex items-center justify-center z-50 px-4 animate-[fade-in_150ms_ease-out]">
+      <div className="bg-white rounded-2xl shadow-soft w-full max-w-md p-6 animate-[dialog-in_200ms_cubic-bezier(0.2,0,0,1)]">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="font-serif font-semibold text-lg text-ink">Share document</h2>
+          <button onClick={onClose} className="text-ink-soft hover:text-ink transition-colors duration-150 text-sm">
             Close
           </button>
         </div>
@@ -68,12 +68,12 @@ export default function ShareDialog({ documentId, onClose }: { documentId: strin
             placeholder="email@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-800"
+            className="flex-1 rounded-xl border border-line bg-paper px-3 py-1.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors duration-150"
           />
           <select
             value={role}
             onChange={(e) => setRole(e.target.value as "VIEW" | "EDIT")}
-            className="rounded-md border border-neutral-300 px-2 py-1.5 text-sm"
+            className="rounded-xl border border-line bg-paper px-2 py-1.5 text-sm text-ink"
           >
             <option value="VIEW">Can view</option>
             <option value="EDIT">Can edit</option>
@@ -81,31 +81,31 @@ export default function ShareDialog({ documentId, onClose }: { documentId: strin
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-md bg-neutral-900 text-white px-3 py-1.5 text-sm disabled:opacity-50"
+            className="rounded-full bg-accent text-white px-4 py-1.5 text-sm font-medium transition-[filter,transform] duration-150 hover:brightness-110 active:translate-y-px disabled:opacity-50"
           >
             Invite
           </button>
         </form>
-        {error && <p className="text-sm text-red-600 mb-3">{error}</p>}
+        {error && <p className="text-sm text-red-700 mb-3">{error}</p>}
 
         <div className="space-y-2 max-h-60 overflow-y-auto">
-          {shares === null && <p className="text-sm text-neutral-500">Loading…</p>}
+          {shares === null && <p className="text-sm text-ink-soft">Loading…</p>}
           {shares?.length === 0 && (
-            <p className="text-sm text-neutral-500">Not shared with anyone yet.</p>
+            <p className="text-sm text-ink-soft">Not shared with anyone yet.</p>
           )}
           {shares?.map((share) => (
-            <div key={share.id} className="flex items-center justify-between text-sm border rounded-md px-3 py-2">
+            <div key={share.id} className="flex items-center justify-between text-sm bg-paper rounded-xl px-3.5 py-2.5">
               <div>
-                <p className="font-medium">{share.user.name}</p>
-                <p className="text-neutral-500 text-xs">{share.user.email}</p>
+                <p className="font-medium text-ink">{share.user.name}</p>
+                <p className="text-ink-soft text-xs">{share.user.email}</p>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-700">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-accent-tint text-accent-dark font-medium">
                   {share.role === "EDIT" ? "Can edit" : "Can view"}
                 </span>
                 <button
                   onClick={() => removeShare(share.user.id)}
-                  className="text-red-600 hover:underline text-xs"
+                  className="text-red-700 hover:underline text-xs"
                 >
                   Remove
                 </button>
