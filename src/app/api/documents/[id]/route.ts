@@ -7,7 +7,11 @@ import { canEdit, resolveAccess } from "@/lib/access";
 async function loadDocWithAccess(id: string, userId: string) {
   const document = await prisma.document.findUnique({
     where: { id },
-    include: { shares: { select: { userId: true, role: true } }, owner: { select: { name: true, email: true } } },
+    include: {
+      shares: { select: { userId: true, role: true } },
+      owner: { select: { name: true, email: true } },
+      lastEditedBy: { select: { id: true, name: true } },
+    },
   });
   if (!document) return { document: null, role: null } as const;
   const role = resolveAccess(document, userId);
@@ -49,7 +53,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   const updated = await prisma.document.update({
     where: { id },
-    data: parsed.data,
+    data: { ...parsed.data, lastEditedById: userId },
+    include: { lastEditedBy: { select: { id: true, name: true } } },
   });
 
   return NextResponse.json({ document: updated });

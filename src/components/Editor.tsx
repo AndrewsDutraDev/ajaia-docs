@@ -98,10 +98,16 @@ export default function Editor({
   initialContentHtml,
   editable,
   onChange,
+  onEditorReady,
+  remoteContentHtml,
 }: {
   initialContentHtml: string;
   editable: boolean;
   onChange: (html: string) => void;
+  /** Called once the Tiptap instance exists, so a parent can poll `.isFocused` / push remote updates. */
+  onEditorReady?: (editor: TiptapEditor) => void;
+  /** When this changes and the editor isn't focused, its content replaces the editor's — used for live sync. */
+  remoteContentHtml?: string;
 }) {
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
@@ -129,6 +135,19 @@ export default function Editor({
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (editor) onEditorReady?.(editor);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor]);
+
+  useEffect(() => {
+    if (!editor || remoteContentHtml === undefined) return;
+    if (editor.isFocused) return; // don't clobber active typing
+    if (remoteContentHtml === editor.getHTML()) return;
+    editor.commands.setContent(remoteContentHtml, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remoteContentHtml]);
 
   if (!editor) return null;
 

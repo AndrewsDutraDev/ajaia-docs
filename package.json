@@ -18,10 +18,12 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "@types/turndown": "^5.0.6",
     "marked": "^15.0.6",
     "next": "^15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "turndown": "^7.2.4",
     "zod": "^3.24.1"
   },
   "devDependencies": {
