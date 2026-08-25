@@ -32,11 +32,11 @@ export default function ShareDialog({ documentId, onClose }: { documentId: strin
         body: JSON.stringify({ email: email.trim(), role }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Não foi possível compartilhar.");
+      if (!res.ok) throw new Error(data.error ?? "Could not share the document.");
       setEmail("");
       await loadShares();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Não foi possível compartilhar.");
+      setError(err instanceof Error ? err.message : "Could not share the document.");
     } finally {
       setSubmitting(false);
     }
@@ -55,9 +55,9 @@ export default function ShareDialog({ documentId, onClose }: { documentId: strin
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-lg">Compartilhar documento</h2>
+          <h2 className="font-semibold text-lg">Share document</h2>
           <button onClick={onClose} className="text-neutral-500 hover:text-neutral-900 text-sm">
-            Fechar
+            Close
           </button>
         </div>
 
@@ -65,7 +65,7 @@ export default function ShareDialog({ documentId, onClose }: { documentId: strin
           <input
             type="email"
             required
-            placeholder="email@exemplo.com"
+            placeholder="email@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-800"
@@ -75,23 +75,23 @@ export default function ShareDialog({ documentId, onClose }: { documentId: strin
             onChange={(e) => setRole(e.target.value as "VIEW" | "EDIT")}
             className="rounded-md border border-neutral-300 px-2 py-1.5 text-sm"
           >
-            <option value="VIEW">Pode visualizar</option>
-            <option value="EDIT">Pode editar</option>
+            <option value="VIEW">Can view</option>
+            <option value="EDIT">Can edit</option>
           </select>
           <button
             type="submit"
             disabled={submitting}
             className="rounded-md bg-neutral-900 text-white px-3 py-1.5 text-sm disabled:opacity-50"
           >
-            Convidar
+            Invite
           </button>
         </form>
         {error && <p className="text-sm text-red-600 mb-3">{error}</p>}
 
         <div className="space-y-2 max-h-60 overflow-y-auto">
-          {shares === null && <p className="text-sm text-neutral-500">Carregando…</p>}
+          {shares === null && <p className="text-sm text-neutral-500">Loading…</p>}
           {shares?.length === 0 && (
-            <p className="text-sm text-neutral-500">Ainda não compartilhado com ninguém.</p>
+            <p className="text-sm text-neutral-500">Not shared with anyone yet.</p>
           )}
           {shares?.map((share) => (
             <div key={share.id} className="flex items-center justify-between text-sm border rounded-md px-3 py-2">
@@ -101,13 +101,13 @@ export default function ShareDialog({ documentId, onClose }: { documentId: strin
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-xs px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-700">
-                  {share.role === "EDIT" ? "Pode editar" : "Pode visualizar"}
+                  {share.role === "EDIT" ? "Can edit" : "Can view"}
                 </span>
                 <button
                   onClick={() => removeShare(share.user.id)}
                   className="text-red-600 hover:underline text-xs"
                 >
-                  Remover
+                  Remove
                 </button>
               </div>
             </div>

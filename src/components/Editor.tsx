@@ -37,37 +37,37 @@ function ToolbarButton({
 function Toolbar({ editor }: { editor: TiptapEditor }) {
   return (
     <div className="flex flex-wrap items-center gap-1 border-b border-neutral-200 bg-white px-3 py-2 sticky top-0 z-10">
-      <ToolbarButton label="Negrito" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}>
+      <ToolbarButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}>
         <span className="font-bold">B</span>
       </ToolbarButton>
-      <ToolbarButton label="Itálico" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}>
+      <ToolbarButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}>
         <span className="italic">I</span>
       </ToolbarButton>
-      <ToolbarButton label="Sublinhado" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}>
+      <ToolbarButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}>
         <span className="underline">U</span>
       </ToolbarButton>
 
       <span className="w-px h-5 bg-neutral-300 mx-1" />
 
-      <ToolbarButton label="Parágrafo" active={editor.isActive("paragraph")} onClick={() => editor.chain().focus().setParagraph().run()}>
-        Texto
+      <ToolbarButton label="Paragraph" active={editor.isActive("paragraph")} onClick={() => editor.chain().focus().setParagraph().run()}>
+        Text
       </ToolbarButton>
       <ToolbarButton
-        label="Título 1"
+        label="Heading 1"
         active={editor.isActive("heading", { level: 1 })}
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
       >
         H1
       </ToolbarButton>
       <ToolbarButton
-        label="Título 2"
+        label="Heading 2"
         active={editor.isActive("heading", { level: 2 })}
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
       >
         H2
       </ToolbarButton>
       <ToolbarButton
-        label="Título 3"
+        label="Heading 3"
         active={editor.isActive("heading", { level: 3 })}
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
       >
@@ -77,18 +77,18 @@ function Toolbar({ editor }: { editor: TiptapEditor }) {
       <span className="w-px h-5 bg-neutral-300 mx-1" />
 
       <ToolbarButton
-        label="Lista com marcadores"
+        label="Bullet list"
         active={editor.isActive("bulletList")}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
       >
-        • Lista
+        • List
       </ToolbarButton>
       <ToolbarButton
-        label="Lista numerada"
+        label="Numbered list"
         active={editor.isActive("orderedList")}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
       >
-        1. Lista
+        1. List
       </ToolbarButton>
     </div>
   );

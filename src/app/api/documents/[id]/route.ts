@@ -16,11 +16,11 @@ async function loadDocWithAccess(id: string, userId: string) {
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId();
-  if (!userId) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
 
   const { id } = await params;
   const { document, role } = await loadDocWithAccess(id, userId);
-  if (!document || !role) return NextResponse.json({ error: "Documento não encontrado." }, { status: 404 });
+  if (!document || !role) return NextResponse.json({ error: "Document not found." }, { status: 404 });
 
   return NextResponse.json({ document, role });
 }
@@ -32,19 +32,19 @@ const patchSchema = z.object({
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId();
-  if (!userId) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
 
   const { id } = await params;
   const { document, role } = await loadDocWithAccess(id, userId);
-  if (!document || !role) return NextResponse.json({ error: "Documento não encontrado." }, { status: 404 });
-  if (!canEdit(role)) return NextResponse.json({ error: "Você não tem permissão para editar este documento." }, { status: 403 });
+  if (!document || !role) return NextResponse.json({ error: "Document not found." }, { status: 404 });
+  if (!canEdit(role)) return NextResponse.json({ error: "You don't have permission to edit this document." }, { status: 403 });
 
   const parsed = patchSchema.safeParse(await req.json().catch(() => ({})));
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Dados inválidos." }, { status: 400 });
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid data." }, { status: 400 });
   }
   if (Object.keys(parsed.data).length === 0) {
-    return NextResponse.json({ error: "Nada para atualizar." }, { status: 400 });
+    return NextResponse.json({ error: "Nothing to update." }, { status: 400 });
   }
 
   const updated = await prisma.document.update({
@@ -57,12 +57,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId();
-  if (!userId) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
 
   const { id } = await params;
   const { document, role } = await loadDocWithAccess(id, userId);
-  if (!document || !role) return NextResponse.json({ error: "Documento não encontrado." }, { status: 404 });
-  if (role !== "OWNER") return NextResponse.json({ error: "Somente o dono pode excluir este documento." }, { status: 403 });
+  if (!document || !role) return NextResponse.json({ error: "Document not found." }, { status: 404 });
+  if (role !== "OWNER") return NextResponse.json({ error: "Only the owner can delete this document." }, { status: 403 });
 
   await prisma.document.delete({ where: { id } });
   return NextResponse.json({ ok: true });

@@ -21,11 +21,11 @@ export default function LoginPage() {
         body: JSON.stringify({ email: value }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Não foi possível entrar.");
+      if (!res.ok) throw new Error(data.error ?? "Could not sign in.");
       router.push("/docs");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Não foi possível entrar.");
+      setError(err instanceof Error ? err.message : "Could not sign in.");
       setLoading(false);
     }
   }
@@ -35,7 +35,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold mb-1">Ajaia Docs</h1>
         <p className="text-sm text-neutral-600 mb-6">
-          Digite seu e-mail para entrar. Não é necessária senha — este é um protótipo com autenticação simulada.
+          Enter your email to sign in. No password required — this is a prototype with simulated authentication.
         </p>
 
         <form
@@ -48,7 +48,7 @@ export default function LoginPage() {
           <input
             type="email"
             required
-            placeholder="voce@exemplo.com"
+            placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-800"
@@ -59,13 +59,13 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full rounded-md bg-neutral-900 text-white py-2 text-sm font-medium disabled:opacity-50"
           >
-            {loading ? "Entrando…" : "Entrar"}
+            {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
 
         <div className="mt-6">
           <p className="text-xs text-neutral-500 mb-2">
-            Contas de exemplo para testar compartilhamento entre usuários:
+            Example accounts to test sharing between users:
           </p>
           <div className="flex gap-2">
             {QUICK_PICKS.map((quickEmail) => (

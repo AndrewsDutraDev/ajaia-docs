@@ -8,7 +8,7 @@ import ShareDialog from "@/components/ShareDialog";
 import type { CurrentUser, OwnedDocSummary, SharedDocSummary } from "@/lib/types";
 
 function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(
+  return new Intl.DateTimeFormat("en-US", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(
     new Date(iso)
   );
 }
@@ -38,10 +38,10 @@ export default function Dashboard({
     try {
       const res = await fetch("/api/documents", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Não foi possível criar o documento.");
+      if (!res.ok) throw new Error(data.error ?? "Could not create the document.");
       router.push(`/docs/${data.document.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro inesperado.");
+      setError(err instanceof Error ? err.message : "Unexpected error.");
       setBusy(false);
     }
   }
@@ -54,10 +54,10 @@ export default function Dashboard({
       form.append("file", file);
       const res = await fetch("/api/documents/import", { method: "POST", body: form });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Não foi possível importar o arquivo.");
+      if (!res.ok) throw new Error(data.error ?? "Could not import the file.");
       router.push(`/docs/${data.document.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro inesperado.");
+      setError(err instanceof Error ? err.message : "Unexpected error.");
       setBusy(false);
     }
   }
@@ -75,7 +75,7 @@ export default function Dashboard({
   }
 
   async function deleteDoc(id: string) {
-    if (!confirm("Excluir este documento? Esta ação não pode ser desfeita.")) return;
+    if (!confirm("Delete this document? This action cannot be undone.")) return;
     setOwned((prev) => prev.filter((d) => d.id !== id));
     await fetch(`/api/documents/${id}`, { method: "DELETE" });
   }
@@ -96,14 +96,14 @@ export default function Dashboard({
             disabled={busy}
             className="rounded-md bg-neutral-900 text-white text-sm font-medium px-4 py-2 disabled:opacity-50"
           >
-            + Novo documento
+            + New document
           </button>
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={busy}
             className="rounded-md border border-neutral-300 text-sm font-medium px-4 py-2 hover:bg-neutral-100 disabled:opacity-50"
           >
-            Importar arquivo (.txt, .md)
+            Import file (.txt, .md)
           </button>
           <input
             ref={fileInputRef}
@@ -121,9 +121,9 @@ export default function Dashboard({
         {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
 
         <section className="mb-10">
-          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide mb-3">Meus documentos</h2>
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide mb-3">My documents</h2>
           {owned.length === 0 ? (
-            <p className="text-sm text-neutral-500">Nenhum documento ainda. Crie o primeiro acima.</p>
+            <p className="text-sm text-neutral-500">No documents yet. Create your first one above.</p>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {owned.map((doc) => (
@@ -142,7 +142,7 @@ export default function Dashboard({
                       {doc.title}
                     </Link>
                   )}
-                  <p className="text-xs text-neutral-500">Atualizado em {formatDate(doc.updatedAt)}</p>
+                  <p className="text-xs text-neutral-500">Updated {formatDate(doc.updatedAt)}</p>
                   <div className="flex gap-3 text-xs mt-1">
                     <button
                       onClick={() => {
@@ -151,13 +151,13 @@ export default function Dashboard({
                       }}
                       className="text-neutral-500 hover:text-neutral-900"
                     >
-                      Renomear
+                      Rename
                     </button>
                     <button onClick={() => setSharingId(doc.id)} className="text-neutral-500 hover:text-neutral-900">
-                      Compartilhar
+                      Share
                     </button>
                     <button onClick={() => deleteDoc(doc.id)} className="text-red-600 hover:underline ml-auto">
-                      Excluir
+                      Delete
                     </button>
                   </div>
                 </div>
@@ -168,10 +168,10 @@ export default function Dashboard({
 
         <section>
           <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide mb-3">
-            Compartilhados comigo
+            Shared with me
           </h2>
           {shared.length === 0 ? (
-            <p className="text-sm text-neutral-500">Nenhum documento foi compartilhado com você ainda.</p>
+            <p className="text-sm text-neutral-500">No documents have been shared with you yet.</p>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {shared.map((doc) => (
@@ -182,10 +182,10 @@ export default function Dashboard({
                 >
                   <span className="font-medium text-sm truncate">{doc.title}</span>
                   <p className="text-xs text-neutral-500">
-                    de {doc.owner.name} · {formatDate(doc.updatedAt)}
+                    from {doc.owner.name} · {formatDate(doc.updatedAt)}
                   </p>
                   <span className="text-xs w-fit px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-700">
-                    {doc.role === "EDIT" ? "Pode editar" : "Pode visualizar"}
+                    {doc.role === "EDIT" ? "Can edit" : "Can view"}
                   </span>
                 </Link>
               ))}

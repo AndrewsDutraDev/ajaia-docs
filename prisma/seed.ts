@@ -15,16 +15,16 @@ async function main() {
     create: { email: "bruno@ajaia.com", name: "Bruno" },
   });
 
+  const welcomeDocData = {
+    title: "Welcome to Ajaia Docs",
+    contentHtml:
+      "<h1>Welcome to Ajaia Docs</h1><p>This is a sample document created by <strong>Ana</strong>. Edit this text, format it with <em>italics</em>, <u>underline</u>, and lists.</p><ul><li>Item one</li><li>Item two</li></ul>",
+  };
+
   const welcomeDoc = await prisma.document.upsert({
     where: { id: "seed-welcome-doc" },
-    update: {},
-    create: {
-      id: "seed-welcome-doc",
-      title: "Bem-vindo ao Ajaia Docs",
-      ownerId: ana.id,
-      contentHtml:
-        "<h1>Bem-vindo ao Ajaia Docs</h1><p>Este é um documento de exemplo criado pela <strong>Ana</strong>. Edite este texto, formate com <em>itálico</em>, <u>sublinhado</u> e listas.</p><ul><li>Item um</li><li>Item dois</li></ul>",
-    },
+    update: welcomeDocData,
+    create: { id: "seed-welcome-doc", ownerId: ana.id, ...welcomeDocData },
   });
 
   await prisma.share.upsert({
@@ -33,7 +33,7 @@ async function main() {
     create: { documentId: welcomeDoc.id, userId: bruno.id, role: "EDIT" },
   });
 
-  console.log("Seed concluído:", { ana: ana.email, bruno: bruno.email });
+  console.log("Seed complete:", { ana: ana.email, bruno: bruno.email });
 }
 
 main()

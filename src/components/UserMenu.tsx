@@ -24,7 +24,7 @@ export default function UserMenu({ name, email }: { name: string; email: string 
         disabled={loggingOut}
         className="text-neutral-500 hover:text-neutral-900 disabled:opacity-50"
       >
-        Sair
+        Log out
       </button>
     </div>
   );

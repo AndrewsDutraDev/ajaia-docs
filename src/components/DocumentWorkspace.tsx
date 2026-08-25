@@ -54,7 +54,7 @@ export default function DocumentWorkspace({
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <Link href="/docs" className="text-sm text-neutral-500 hover:text-neutral-900 shrink-0">
-              ← Documentos
+              ← Documents
             </Link>
             <input
               value={title}
@@ -67,15 +67,15 @@ export default function DocumentWorkspace({
           <div className="flex items-center gap-4 shrink-0">
             <SaveIndicator status={status} />
             {role === "VIEW" && (
-              <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800">Somente leitura</span>
+              <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800">Read-only</span>
             )}
-            {ownerLabel && <span className="text-xs text-neutral-500 hidden sm:inline">de {ownerLabel}</span>}
+            {ownerLabel && <span className="text-xs text-neutral-500 hidden sm:inline">from {ownerLabel}</span>}
             {role === "OWNER" && (
               <button
                 onClick={() => setShareOpen(true)}
                 className="text-sm rounded-md border border-neutral-300 px-3 py-1.5 hover:bg-neutral-100"
               >
-                Compartilhar
+                Share
               </button>
             )}
             <UserMenu name={currentUser.name} email={currentUser.email} />
@@ -98,7 +98,7 @@ export default function DocumentWorkspace({
 
 function SaveIndicator({ status }: { status: SaveStatus }) {
   const text =
-    status === "saving" ? "Salvando…" : status === "saved" ? "Salvo" : status === "error" ? "Erro ao salvar" : "";
+    status === "saving" ? "Saving…" : status === "saved" ? "Saved" : status === "error" ? "Error saving" : "";
   if (!text) return null;
   return (
     <span className={`text-xs ${status === "error" ? "text-red-600" : "text-neutral-500"}`}>{text}</span>

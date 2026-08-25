@@ -7,19 +7,19 @@ const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2MB is plenty for .txt/.md source tex
 
 export async function POST(req: NextRequest) {
   const userId = await getSessionUserId();
-  if (!userId) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
 
   const form = await req.formData().catch(() => null);
   const file = form?.get("file");
 
   if (!file || !(file instanceof File)) {
-    return NextResponse.json({ error: "Nenhum arquivo enviado." }, { status: 400 });
+    return NextResponse.json({ error: "No file was uploaded." }, { status: 400 });
   }
   if (file.size === 0) {
-    return NextResponse.json({ error: "O arquivo está vazio." }, { status: 400 });
+    return NextResponse.json({ error: "The file is empty." }, { status: 400 });
   }
   if (file.size > MAX_SIZE_BYTES) {
-    return NextResponse.json({ error: "Arquivo maior que 2MB. Use um arquivo de texto menor." }, { status: 400 });
+    return NextResponse.json({ error: "File is larger than 2MB. Use a smaller text file." }, { status: 400 });
   }
 
   try {
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     if (err instanceof UnsupportedFileTypeError) {
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
-    console.error("Falha ao importar arquivo:", err);
-    return NextResponse.json({ error: "Não foi possível importar o arquivo." }, { status: 500 });
+    console.error("Failed to import file:", err);
+    return NextResponse.json({ error: "Could not import the file." }, { status: 500 });
   }
 }

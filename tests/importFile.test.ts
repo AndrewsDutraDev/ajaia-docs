@@ -3,39 +3,39 @@ import { parseImportedFile, UnsupportedFileTypeError } from "../src/lib/importFi
 
 describe("parseImportedFile", () => {
   it("converts plain text paragraphs into <p> tags", () => {
-    const result = parseImportedFile("meu-relatorio.txt", "Primeiro parágrafo.\n\nSegundo parágrafo.");
-    expect(result.title).toBe("meu relatorio");
-    expect(result.html).toBe("<p>Primeiro parágrafo.</p><p>Segundo parágrafo.</p>");
+    const result = parseImportedFile("my-report.txt", "First paragraph.\n\nSecond paragraph.");
+    expect(result.title).toBe("my report");
+    expect(result.html).toBe("<p>First paragraph.</p><p>Second paragraph.</p>");
   });
 
   it("escapes HTML special characters in plain text", () => {
-    const result = parseImportedFile("notas.txt", "1 < 2 && 3 > 1");
+    const result = parseImportedFile("notes.txt", "1 < 2 && 3 > 1");
     expect(result.html).toContain("&lt;");
     expect(result.html).toContain("&gt;");
     expect(result.html).not.toContain("<script");
   });
 
   it("converts markdown headings and bold text to HTML", () => {
-    const result = parseImportedFile("guia.md", "# Título\n\nTexto em **negrito**.");
-    expect(result.html).toContain("<h1>Título</h1>");
-    expect(result.html).toContain("<strong>negrito</strong>");
+    const result = parseImportedFile("guide.md", "# Heading\n\nText in **bold**.");
+    expect(result.html).toContain("<h1>Heading</h1>");
+    expect(result.html).toContain("<strong>bold</strong>");
   });
 
   it("falls back to a default title when the filename has no usable name", () => {
-    const result = parseImportedFile(".txt", "conteúdo");
-    expect(result.title).toBe("Documento importado");
+    const result = parseImportedFile(".txt", "content");
+    expect(result.title).toBe("Imported document");
   });
 
   it("returns an empty paragraph for blank content instead of an empty string", () => {
-    const result = parseImportedFile("vazio.txt", "   \n\n   ");
+    const result = parseImportedFile("blank.txt", "   \n\n   ");
     expect(result.html).toBe("<p></p>");
   });
 
   it("rejects unsupported file extensions", () => {
-    expect(() => parseImportedFile("planilha.xlsx", "dados")).toThrow(UnsupportedFileTypeError);
+    expect(() => parseImportedFile("spreadsheet.xlsx", "data")).toThrow(UnsupportedFileTypeError);
   });
 
   it("rejects files without any extension", () => {
-    expect(() => parseImportedFile("arquivo", "dados")).toThrow(UnsupportedFileTypeError);
+    expect(() => parseImportedFile("file", "data")).toThrow(UnsupportedFileTypeError);
   });
 });

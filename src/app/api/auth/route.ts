@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { setSessionCookie } from "@/lib/session";
 
 const bodySchema = z.object({
-  email: z.string().trim().toLowerCase().email("Informe um e-mail válido."),
+  email: z.string().trim().toLowerCase().email("Please enter a valid email address."),
 });
 
 function nameFromEmail(email: string): string {
@@ -16,7 +16,7 @@ function nameFromEmail(email: string): string {
 export async function POST(req: NextRequest) {
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Dados inválidos." }, { status: 400 });
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid data." }, { status: 400 });
   }
 
   const { email } = parsed.data;

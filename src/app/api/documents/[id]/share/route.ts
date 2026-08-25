@@ -16,12 +16,12 @@ async function requireOwner(id: string, userId: string) {
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId();
-  if (!userId) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
 
   const { id } = await params;
   const { document, isOwner } = await requireOwner(id, userId);
-  if (!document) return NextResponse.json({ error: "Documento não encontrado." }, { status: 404 });
-  if (!isOwner) return NextResponse.json({ error: "Somente o dono pode ver os compartilhamentos." }, { status: 403 });
+  if (!document) return NextResponse.json({ error: "Document not found." }, { status: 404 });
+  if (!isOwner) return NextResponse.json({ error: "Only the owner can view sharing settings." }, { status: 403 });
 
   const shares = await prisma.share.findMany({
     where: { documentId: id },
@@ -33,7 +33,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 const shareSchema = z.object({
-  email: z.string().trim().toLowerCase().email("Informe um e-mail válido."),
+  email: z.string().trim().toLowerCase().email("Please enter a valid email address."),
   role: z.enum(["VIEW", "EDIT"]).default("VIEW"),
 });
 
@@ -45,22 +45,22 @@ function nameFromEmail(email: string): string {
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId();
-  if (!userId) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
 
   const { id } = await params;
   const { document, isOwner } = await requireOwner(id, userId);
-  if (!document) return NextResponse.json({ error: "Documento não encontrado." }, { status: 404 });
-  if (!isOwner) return NextResponse.json({ error: "Somente o dono pode compartilhar este documento." }, { status: 403 });
+  if (!document) return NextResponse.json({ error: "Document not found." }, { status: 404 });
+  if (!isOwner) return NextResponse.json({ error: "Only the owner can share this document." }, { status: 403 });
 
   const parsed = shareSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Dados inválidos." }, { status: 400 });
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid data." }, { status: 400 });
   }
 
   const { email, role } = parsed.data;
 
   if (email === (await prisma.user.findUnique({ where: { id: userId } }))?.email) {
-    return NextResponse.json({ error: "Você já é o dono deste documento." }, { status: 400 });
+    return NextResponse.json({ error: "You're already the owner of this document." }, { status: 400 });
   }
 
   const targetUser = await prisma.user.upsert({
@@ -83,16 +83,16 @@ const deleteSchema = z.object({ userId: z.string().min(1) });
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const userId = await getSessionUserId();
-  if (!userId) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
 
   const { id } = await params;
   const { document, isOwner } = await requireOwner(id, userId);
-  if (!document) return NextResponse.json({ error: "Documento não encontrado." }, { status: 404 });
-  if (!isOwner) return NextResponse.json({ error: "Somente o dono pode remover acesso." }, { status: 403 });
+  if (!document) return NextResponse.json({ error: "Document not found." }, { status: 404 });
+  if (!isOwner) return NextResponse.json({ error: "Only the owner can remove access." }, { status: 403 });
 
   const parsed = deleteSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json({ error: "Informe o usuário a remover." }, { status: 400 });
+    return NextResponse.json({ error: "Please specify which user to remove." }, { status: 400 });
   }
 
   await prisma.share.deleteMany({ where: { documentId: id, userId: parsed.data.userId } });
